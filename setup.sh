@@ -7,7 +7,7 @@ if [ -d "$directory" ]; then
   exit 0
 fi
 
-latest_release_tag=$(curl -sL "https://api.github.com/repos/EnigmaticRadiance/netgear-orbi-scriptsorcerer/releases/latest" | grep -o '"tag_name": "v[^"]*' | grep -o '[0-9.]*$')
+latest_release_tag=$(curl -sL "https://api.github.com/repos/EnigmaticRadiance/netgear-orbi-scriptsorcerer/releases/latest" | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
 latest_release_url="https://github.com/EnigmaticRadiance/netgear-orbi-scriptsorcerer/archive/refs/tags/v$latest_release_tag.zip"
 
 curl -sL "$latest_release_url" -o /tmp/scriptsorcerer.zip
