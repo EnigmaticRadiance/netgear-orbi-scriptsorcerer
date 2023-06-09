@@ -11,7 +11,7 @@ latest_release_tag=$(curl -sL "https://api.github.com/repos/EnigmaticRadiance/ne
 latest_release_url="https://github.com/EnigmaticRadiance/netgear-orbi-scriptsorcerer/archive/refs/tags/$latest_release_tag.zip"
 
 curl -sL "$latest_release_url" -o /tmp/scriptsorcerer.zip
-unzip -p /tmp/scriptsorcerer.zip -d /tmp/scriptsorcerer
+unzip /tmp/scriptsorcerer.zip -d /tmp/scriptsorcerer
 mv /tmp/scriptsorcerer/netgear-orbi-scriptsorcerer-"$latest_release_tag"/scriptsorcerer "$directory"
 rm /tmp/scriptsorcerer.zip
 rm -r /tmp/scriptsorcerer
