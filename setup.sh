@@ -18,6 +18,8 @@ rm -r /tmp/scriptsorcerer
 
 echo $latest_release_tag > $directory/ver
 
+find "$directory" -type f -name "*.sh" -exec chmod a+x {} +
+
 echo "The scriptsorcerer has been downloaded and moved sucessfully. attempting hook."
 
 sh $directory/setup/hook.sh
