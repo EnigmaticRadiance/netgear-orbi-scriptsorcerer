@@ -1,9 +1,17 @@
-#!/bin/bash
+#!/bin/sh
+#fixes the router handing out itself as the dns server, and instead edits the config files to hand out any servers in /etc/resolv.conf 
+#which are updated when the web gui dns servers are changed this will NOT dynamically do that.
+#I made this because it was annoying not being able to seperate traffic by clients in my pihole.
+#MAJOR NOTES: this will 100% break certain things. it might break access control, I haven't checked yet. 
+#it DEFINITELY breaks orbilogin.net being the router homepage, make sure you know the ip.
+#TODO kill processes related to dns forwarding? add another sed to /etc/init.d/net-lan, seems to be where the /tmp/udhcpd_pid is always set. 
+#TODO probably don't net-lan restart since it takes a while, add PID check for dhcpv6, 
+#TODO hook into the file which updates dns settings when they are changed in web gui so its fully dynamic!!!!! (idk where it is tho)
 
 # Read the contents of /etc/resolv.conf into a variable (its more efficient than 2 fs reads (in my heart :broken_heart:))
 resolv_conf=$(cat /etc/resolv.conf)
 
-# Retrieve IPv4 and IPv6 addresses from the contents of /etc/resolv.conf
+# Retrieve IPv4 and IPv6 addresses from the contents of /etc/resolv.conf & format them into the correct formatting for the dhcp conf files.
 ipv4_addresses=$(echo "$resolv_conf" | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | tr '\n' ' ')
 ipv6_addresses=$(echo "$resolv_conf" | grep ':' | awk '{print $2}' | tr '\n' ' ')
 
