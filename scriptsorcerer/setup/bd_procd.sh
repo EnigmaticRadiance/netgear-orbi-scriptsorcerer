@@ -7,4 +7,4 @@
 #will consider hooking into this file in the future. looks like it purges AFTER the hook would have run. not quite sure.
 /tmp/mnt/bitdefender/bin/bd_procd.bak "$@" &
 
-sh /mnt/ntgr/scriptsorcerer/init/initialize.sh &
+sh /mnt/ntgr/scriptsorcerer/init/~initialize.sh &
