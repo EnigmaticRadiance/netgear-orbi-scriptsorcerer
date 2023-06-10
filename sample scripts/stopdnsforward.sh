@@ -2,9 +2,12 @@
 #fixes the router handing out itself as the dns server, and instead edits the config files to hand out any servers in /etc/resolv.conf 
 #which are updated when the web gui dns servers are changed this will NOT dynamically do that.
 #I made this because it was annoying not being able to seperate traffic by clients in my pihole.
+#And forwarding DNS like this breaks DNSSEC.
+#it might not work on ipv6 with RA messages, but it works if you enable dhcpv6, 
+#which you should, since windows 11 ignores ipv6 DNS RA messages if it uses dhcp for ipv4. Honestly quite incredible. 
 #MAJOR NOTES: this will 100% break certain things. it might break access control, I haven't checked yet. 
 #it DEFINITELY breaks orbilogin.net being the router homepage, make sure you know the ip.
-#TODO kill processes related to dns forwarding? add PID check for dhcpv6, 
+#TODO kill processes related to dns forwarding?
 #TODO hook into the file which updates dns settings when they are changed in web gui so its fully dynamic!!!!! (idk where it is tho)
 
 # Read the contents of /etc/resolv.conf into a variable (its more efficient than 2 fs reads (in my heart :broken_heart:))
@@ -16,6 +19,7 @@ ipv6_addresses=$(echo "$resolv_conf" | grep ':' | awk '{print $2}' | tr '\n' ' '
 
 # Check if udhcpd is running and get its PID
 udhcpd_pid=$(pgrep -f "udhcpd.*\/tmp\/udhcpd.conf")
+dhcp6s_pid=$(pgrep -f "dhcp6s.*\/tmp\/dhcp6s.conf")
 
 # Function to handle IPv4 DNS configuration
 function v4() {
@@ -36,6 +40,6 @@ if [[ -n "$udhcpd_pid" ]] && [[ -n "$ipv4_addresses" ]]; then
 fi
 
 # Check if there are IPv6 addresses in /etc/resolv.conf before executing v6
-if [[ -n "$ipv6_addresses" ]]; then
+if [[ -n "$dhcp6s_pid" ]] && [[ -n "$ipv6_addresses" ]]; then
     v6 &
 fi
