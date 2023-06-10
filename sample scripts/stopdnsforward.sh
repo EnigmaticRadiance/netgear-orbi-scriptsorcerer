@@ -4,8 +4,7 @@
 #I made this because it was annoying not being able to seperate traffic by clients in my pihole.
 #MAJOR NOTES: this will 100% break certain things. it might break access control, I haven't checked yet. 
 #it DEFINITELY breaks orbilogin.net being the router homepage, make sure you know the ip.
-#TODO kill processes related to dns forwarding? add another sed to /etc/init.d/net-lan, seems to be where the /tmp/udhcpd_pid is always set. 
-#TODO probably don't net-lan restart since it takes a while, add PID check for dhcpv6, 
+#TODO kill processes related to dns forwarding? add PID check for dhcpv6, 
 #TODO hook into the file which updates dns settings when they are changed in web gui so its fully dynamic!!!!! (idk where it is tho)
 
 # Read the contents of /etc/resolv.conf into a variable (its more efficient than 2 fs reads (in my heart :broken_heart:))
@@ -21,7 +20,7 @@ udhcpd_pid=$(pgrep -f "udhcpd.*\/tmp\/udhcpd.conf")
 # Function to handle IPv4 DNS configuration
 function v4() {
     kill "$udhcpd_pid"
-    sed -i "s/^option dns .*/option dns $ipv4_addresses/" /tmp/udhcpd.conf
+    sed -i "s/^option dns .*/option dns $ipv4_addresses/" /tmp/udhcpd.conf /etc/init.d/net-lan
     udhcpd /tmp/udhcpd.conf &
 }
 

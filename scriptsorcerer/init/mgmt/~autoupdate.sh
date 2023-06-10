@@ -5,7 +5,11 @@
 #I would personally recommend NOT enabling it. auto-updating from the github repo almost certainly makes your router less secure.
 #Even though I would never intentionally put anything malicious in it.
 #Just manually run it if you see a new update and care to update it. 
-#TODO auto-update scripts? maybe include a shebang type of thing with a url & version number? HOOK INTO CRONTAB OR SMTH SO IT DOESN'T ONLY UPDATE ON BOOT!
+#TODO auto-update scripts? maybe include a shebang type of thing with a url & version number?
+if ! basename "$0" | grep -q '~'; then
+#run every 2 days
+echo "0 0 */2 * * sh /mnt/netgear/scriptsorcerer/init/mgmt/autoupdate.sh" >> /tmp/etc/crontabs/root
+fi
 
 directory="/mnt/ntgr/scriptsorcerer"
 current_release_tag=$(cat $directory/ver)
